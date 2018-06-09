@@ -1,0 +1,31 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  resources:
+    chain:
+      cache: false
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML5
+    servlet:
+      content-type: text/html
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  devtools:
+    restart:
+      enabled: true
+server:
+  port: 8888
+  tomcat:
+    uri-encoding: UTF-8
+
+
+
+
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html    <script src="/bootstrap/js/jquery-1.11.3.min.js"></script>
+      5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <h1>你好，世界！</h1>
+
+    <a href="#" class="bind_hover_card" data-toggle="popover1" data-placement="bottom" data-trigger="hover">jack good</a>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script>
+    	 $(function() {  
+    $("[data-toggle='popover1']").popover({  
+        html : true,    
+        title: '田喜碧Hebe(节制的人生)',    
+        delay:{show:500, hide:1000}
+  
+    });  
+}); 
+		     //模拟动态加载标题(真实情况可能会跟后台进行ajax交互)  
+    function titale() {  
+        return '田喜碧Hebe(节制的人生)';  
+    }  
+      
+    //模拟动态加载内容(真实情况可能会跟后台进行ajax交互)  
+    function content() {  
+        var data = $("<form><ul><li><span aria-hidden='true' class='icon_globe'></span>&nbsp;<font>粉丝数:</font>7389223</li>" +  
+                 "<li><span aria-hidden='true' class='icon_piechart'></span>&nbsp;<font>关注:</font>265</li>" +  
+                 "<li><span aria-hidden='true' class='icon_search_alt'></span>&nbsp;<font>微博:</font>645</li>" +  
+                 "<li><span aria-hidden='true' class='icon_pens_alt'></span>&nbsp;<font>所在地:</font>台湾</li>" +  
+                 "<input id='btn' type='button' value='关注' onclick='test()'/></form>");  
+          
+        return data;  
+    }  
+    //模拟悬浮框里面的按钮点击操作  
+    function test() {  
+        alert('关注成功');  
+    }  
+    </script>
+  </body>
+</html>

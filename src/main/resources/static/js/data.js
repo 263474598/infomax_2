@@ -1,0 +1,2 @@
+var myData = [{"id":"da243f60-73d3-426a-9a27-928acf5555c5","fundName":"ABF Bond","month":"2018-05","diff":"6","link":"<a>www.baidu.com</a>"},
+{"id":"00dc8dbb-cfe3-45d4-9015-b9d199bfd4b5","fundName":"ETF Fund","month":"2018-05","diff":"5","link":"<a>www.baidu.com</a>"}]
