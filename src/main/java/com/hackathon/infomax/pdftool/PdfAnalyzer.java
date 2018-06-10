@@ -5,15 +5,25 @@ import java.util.List;
 public class PdfAnalyzer {
 
     public static void main(String[] args) throws Exception {
-        CompareEngine compareEngine = new CompareEngine();
+        AnalyzeUtil analyzeUtil = new AnalyzeUtil();
+        analyzeUtil.generate("/Users/qiuguanglin/Downloads/", "informax.pdf", "/Users/qiuguanglin/Downloads");
+        analyzeUtil.generate("/Users/qiuguanglin/Downloads/", "informax-wrong.pdf", "/Users/qiuguanglin/Downloads");
 
+        CompareEngine compareEngine = new CompareEngine();
         System.out.println("---------------- table compare result ---------------- ");
-        List<CompareResult> compareResults = compareEngine.doCompare("informax.pdf", "informax-wrong.pdf");
+        List<CompareResult> compareResults =
+                compareEngine.doCompare("/Users/qiuguanglin/Downloads/informax.html", "/Users/qiuguanglin/Downloads/informax-wrong.html");
         compareResults.forEach(PdfAnalyzer::dumpResult);
 
-//        System.out.println("---------------- word compare result ---------------- ");
-//        compareResults = compareEngine.doCompareWords("1.pdf", "2.pdf");
-//        compareResults.forEach(PdfAnalyzer::dumpResult);
+        System.out.println("---------------- word compare result ---------------- ");
+        analyzeUtil.generate("/Users/qiuguanglin/Downloads/", "1.pdf", "/Users/qiuguanglin/Downloads");
+        analyzeUtil.generate("/Users/qiuguanglin/Downloads/", "2.pdf", "/Users/qiuguanglin/Downloads");
+
+        compareEngine = new CompareEngine();
+        System.out.println("---------------- table compare result ---------------- ");
+        List<CompareResult> compareResults2 =
+                compareEngine.doCompareWords("/Users/qiuguanglin/Downloads/1.html", "/Users/qiuguanglin/Downloads/2.html");
+        compareResults2.forEach(PdfAnalyzer::dumpResult);
     }
 
     private static void dumpResult(CompareResult compareResult) {
