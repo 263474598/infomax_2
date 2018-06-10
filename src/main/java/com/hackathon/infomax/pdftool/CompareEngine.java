@@ -16,9 +16,16 @@ public class CompareEngine {
     private static AnalyzeUtil analyzeUtil = new AnalyzeUtil();
 
     public List<CompareResult> doCompare(String templateHtmlFile, String tobeComparedHtmlFile) throws Exception {
-        List<String> templateNodes = getNodes(templateHtmlFile);
 
-        List<String> tobeComparedNodes = getNodes(tobeComparedHtmlFile);
+        List<String> templateNodes = getNodes(templateHtmlFile, "225|226|227");
+        templateNodes.addAll(getNodes(templateHtmlFile, "228|229|230"));
+        templateNodes.addAll(getNodes(templateHtmlFile, "231|232|233"));
+        templateNodes.addAll(getNodes(templateHtmlFile, "234|235|236"));
+
+        List<String> tobeComparedNodes = getNodes(tobeComparedHtmlFile, "225|226|227");
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "228|229|230"));
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "231|232|233"));
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "234|235|236"));
 
         List<ValueMataData> templateValueMetaData = new ArrayList<>();
         templateNodes.forEach(t -> templateValueMetaData.add(analyzeUtil.getValueMetaData(t)));
@@ -32,6 +39,13 @@ public class CompareEngine {
         compareResultsTable.addAll(compareResultsParagraph);
 
         return compareResultsTable;
+    }
+
+    private List<String> getNodes(String htmlFile, String ids) throws Exception {
+        analyzeUtil.extract(htmlFile);
+        List<String> nodesInfo = new ArrayList<>();
+        nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(" + ids + ")\".+>([\\w\\,]+)<\\/div>", htmlFile));
+        return nodesInfo;
     }
 
     private List<ValueMataData> getValueMetaData(String region, String fileContent) {
@@ -92,18 +106,6 @@ public class CompareEngine {
         cr.setId(id);
 
         return cr;
-    }
-
-    private List<String> getNodes(String htmlFile) throws Exception {
-        analyzeUtil.extract(htmlFile);
-        List<String> nodesInfo = new ArrayList<>();
-//        List<String> nodesInfo = analyzeUtil.findElementsByRegexp("<div.+id=\"p(222|223|224)\".+>([\\w\\,]+)<\\/div>", htmlFile);
-        nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(225|226|227)\".+>([\\w\\,]+)<\\/div>", htmlFile));
-        nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(228|229|230)\".+>([\\w\\,]+)<\\/div>", htmlFile));
-        nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(231|232|233)\".+>([\\w\\,]+)<\\/div>", htmlFile));
-        nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(234|235|236)\".+>([\\w\\,]+)<\\/div>", htmlFile));
-
-        return nodesInfo;
     }
 
     private List<CompareResult> compareNodes(List<ValueMataData> templateValueMetaData, List<ValueMataData> tobeComparedValueMetaData) {
