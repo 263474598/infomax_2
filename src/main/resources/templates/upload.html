@@ -132,7 +132,19 @@
 </body>
 <script>
 
+//    var parameter;
+//    //上传时传递额外参数
+//    function transferParameter(){
+//		parameter = $('#year').val() +  $('#month').val();
+//    }
+
+	fodderType = function() {
+  	  return ($("#year").val() + $('#month').val());
+	};
+
+
     $("#file-1").fileinput({
+
         uploadUrl: '/pdf/upload', // you must set a valid URL here else you will get an error
         allowedFileExtensions: ['pdf'],
         overwriteInitial: false,
@@ -141,9 +153,15 @@
         allowedFileTypes: ['pdf'],
         slugCallback: function(filename) {
             return filename.replace('(', '_').replace(']', '_');
+        },
+
+        uploadExtraData: function(previewId, index) {   //额外参数的关键点
+            var obj = {};
+            obj.tempPath = fodderType();
+            console.log(obj);
+            return obj;
         }
     });
-
 
     $(document).ready(function() {
         $("#test-upload").fileinput({

@@ -36,9 +36,9 @@ public class PDFController {
         List<CompareResult> CompareResultList = null;
         try {
             if(pdfHtmlName.contains("AppleCorp")) {
-                CompareResultList = compareEngine.doCompareWords(classPDFPath + original + "/" + pdfHtmlName, classPDFPath + current + "/" + pdfHtmlName);
+                CompareResultList = compareEngine.doCompareWords(classPDFPath + current + "/" + pdfHtmlName, classPDFPath + original + "/" + pdfHtmlName);
             } else {
-                CompareResultList = compareEngine.doCompare(classPDFPath + original + "/" + pdfHtmlName, classPDFPath + current + "/" + pdfHtmlName);
+                CompareResultList = compareEngine.doCompare(classPDFPath + current + "/" + pdfHtmlName, classPDFPath + original + "/" + pdfHtmlName);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class PDFController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public String pdfUpload(String year, String month, HttpServletRequest request) throws Exception {
+    public String pdfUpload(String tempPath, HttpServletRequest request) throws Exception {
 
         List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("pdfFile");
 //        String[] pdfHtmls = new String[10];
@@ -67,7 +67,7 @@ public class PDFController {
                 //save path
 //            Date date4Now = new Date();
 //            String str4Now = new SimpleDateFormat("yyyyMMdd").format(date4Now);
-                String pdfPath = classPDFPath + year + month + "/" ;
+                String pdfPath = classPDFPath + tempPath + "/" ;
                 File pdfFilePath = new File(pdfPath);
                 if (!pdfFilePath.exists()) {
                     boolean flag = pdfFilePath.mkdir();
@@ -89,14 +89,14 @@ public class PDFController {
         }
 
         //Generate PDF file html
-        List<String> pdfFileNameList = FileUtility4MAX.listPDF(classPDFPath + "20180609" + "/");
+        List<String> pdfFileNameList = FileUtility4MAX.listPDF(classPDFPath + tempPath + "/");
         AnalyzeUtil analyzeUtil = new AnalyzeUtil();
         for(String pdfFileName : pdfFileNameList) {
-            analyzeUtil.generate(classPDFPath + year + month + "/", pdfFileName, classPDFPath + "20180609" + "/");
+            analyzeUtil.generate(classPDFPath + tempPath + "/", pdfFileName, classPDFPath + tempPath + "/");
         }
 
         //Delete pdf files
-        FileUtility4MAX.deleteFile(classPDFPath + year + month + "/");
+        FileUtility4MAX.deleteFile(classPDFPath + tempPath + "/");
 
         //Aggregate jsp
 
@@ -118,9 +118,9 @@ public class PDFController {
                 List<CompareResult> compareResultList = null;
                 try {
                     if(html.contains("AppleCorp")) {
-                        compareResultList = compareEngine.doCompareWords(classPDFPath + original + "/"+html, classPDFPath + targetDate + "/"+html);
+                        compareResultList = compareEngine.doCompareWords(classPDFPath + targetDate + "/"+html, classPDFPath + original + "/"+html);
                     } else {
-                        compareResultList = compareEngine.doCompare(classPDFPath + original + "/"+html, classPDFPath + targetDate + "/"+html);
+                        compareResultList = compareEngine.doCompare(classPDFPath + targetDate + "/"+html, classPDFPath + original + "/"+html);
                     }
 
                     ResultVO resultVO = new ResultVO();
