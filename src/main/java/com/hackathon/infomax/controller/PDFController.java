@@ -144,8 +144,9 @@ public class PDFController {
             }
         }
 
-        SendMail sendMail = new SendMail();
-        sendMail.sendMessage(resultVOList);
+        //sendMail
+//        SendMail sendMail = new SendMail();
+//        sendMail.sendMessage(resultVOList);
         return resultVOList;
     }
 

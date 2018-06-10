@@ -133,11 +133,11 @@ public class SendMail {
         String tableHeader;
         //String tableBody="";
         StringBuffer tableBody = new StringBuffer();
-        tableHeader = "<tr><td>Info</td>" +
-                        "<td>Fund Name</td>" +
-                        "<td>Month</td>" +
-                        "<td>Number Of Different</td>" +
-                        "<td>Detail</td></tr>";
+        tableHeader = "<tr><th>Info</th>" +
+                        "<th>Fund Name</th>" +
+                        "<th>Month</th>" +
+                        "<th>Number Of Different</th>" +
+                        "<th>Detail</th></tr>";
         for (ResultVO vo:resultVOlist) {
             tableBody.append("<tr><td>" + (vo.getDiff()<0 ? "Not in last month" : "") + "</td>").
                       append("<td>"+ vo.getFundName() +"</td>").
@@ -150,8 +150,9 @@ public class SendMail {
                     "<td>"+ vo.getDiff() +"</td>" +
                     "<td>"+ vo.getLink() +"</td>";*/
         }
+		String str = "Dear team,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please check the result of factsheet review.</div><br><table border='1' align='center'>";
 
-        return "<table border=1>" + tableHeader + tableBody.toString() + "</table>";
+        return str + tableHeader + tableBody.toString() + "</table><br/>Best Regards,<br/>InforMAX";
 
     }
 }

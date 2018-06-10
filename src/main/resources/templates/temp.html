@@ -50,7 +50,13 @@
                         var originalValue = '';
 
                         currentValue = $("#myIframe").contents().find("#"+data[i].id).html();
+                        if (currentValue == 'fake') {
+                            currentValue = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                        }
+
+
                         for (var j=0; j<data[i].compareFieldInfos.length; j++) {
+
 
                             if(data[i].compareFieldInfos[j].originalValue != null) {
                                 originalValue = data[i].compareFieldInfos[j].originalValue;
