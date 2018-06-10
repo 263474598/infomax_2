@@ -23,11 +23,14 @@ public class FileUtility4MAX {
 
         String[] names = dir.list();
 
-        for (String name : names) {
-            if(name.endsWith(endWith.toLowerCase()) || name.endsWith(endWith.toUpperCase())) {
-                pdfFileNames.add(name);
+        if(names!=null) {
+            for (String name : names) {
+                if(name.endsWith(endWith.toLowerCase()) || name.endsWith(endWith.toUpperCase())) {
+                    pdfFileNames.add(name);
+                }
             }
         }
+
         return pdfFileNames;
     }
 

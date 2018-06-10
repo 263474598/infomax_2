@@ -1,6 +1,7 @@
 package com.hackathon.infomax.controller;
 
 import com.hackathon.infomax.domain.ResultVO;
+import com.hackathon.infomax.mail.SendMail;
 import com.hackathon.infomax.pdftool.AnalyzeUtil;
 import com.hackathon.infomax.pdftool.CompareEngine;
 import com.hackathon.infomax.pdftool.CompareResult;
@@ -127,7 +128,7 @@ public class PDFController {
                     resultVO.setDiff(compareResultList.size());
                     resultVO.setMonth(targetDate);
                     resultVO.setFundName(html.substring(0, html.lastIndexOf(".")));
-                    resultVO.setLink("<a href='/pdf/temp?tempPath=" + resultVO.getMonth() + "/" + html + "'  target='_blank'>" + "/" + resultVO.getMonth() + "/" + resultVO.getFundName() + "</a>");
+                    resultVO.setLink("<a href='http://localhost:8888/pdf/temp?tempPath=" + resultVO.getMonth() + "/" + html + "'  target='_blank'>" + "/" + resultVO.getMonth() + "/" + resultVO.getFundName() + "</a>");
                     resultVOList.add(resultVO);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -143,6 +144,8 @@ public class PDFController {
             }
         }
 
+        SendMail sendMail = new SendMail();
+        sendMail.sendMessage(resultVOList);
         return resultVOList;
     }
 

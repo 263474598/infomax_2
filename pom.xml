@@ -73,6 +73,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.6.1</version>
+		</dependency>-->
+		<dependency >
+			<groupId >com.sun.mail </groupId >
+			<artifactId >javax.mail </artifactId >
+			<version >1.5.4 </version >
+		</dependency >
 	</dependencies>
 
 	<build>
