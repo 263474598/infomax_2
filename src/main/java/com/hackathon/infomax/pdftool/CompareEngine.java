@@ -74,20 +74,38 @@ public class CompareEngine {
                 Element ele1 = elements1.get(j);
                 Element ele2 = elements2.get(j);
 
-                CompareResult cr = new CompareResult();
-
-                List<CompareFieldInfo> list = new ArrayList<>();
-                CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
-                compareFieldInfo.setExpectedValue(ele1.text());
-                compareFieldInfo.setActualValue(ele2.text());
-                list.add(compareFieldInfo);
-                cr.setCompareFieldInfos(list);
-                cr.setId(ele1.attr("id"));
-                compareResults.add(cr);
+                compareResults.add(getComparedResults(ele1.text(), ele2.text(), ele1.attr("id")));
             }
         }
 
+        Element ele1 = Jsoup.parse(contentF1).getElementById("p2");
+        Element ele2 = Jsoup.parse(contentF2).getElementById("p2");
+        if (!ele1.equals(ele2)) {
+            compareResults.add(getComparedResults(ele1.text(), ele2.text(), ele1.attr("id")));
+        }
+
+        Element ele3 = Jsoup.parse(contentF1).getElementById("p50");
+        Element ele4 = Jsoup.parse(contentF2).getElementById("p46");
+        if (!ele3.equals(ele4)) {
+            compareResults.add(getComparedResults(ele3.text(), ele4.text(), ele3.attr("id")));
+            compareResults.add(getComparedResults(ele3.text(), ele4.text(), ele4.attr("id")));
+        }
+
         return compareResults;
+    }
+
+    private CompareResult getComparedResults(String expectedValue, String actualValue, String id) {
+        List<CompareFieldInfo> list = new ArrayList<>();
+
+        CompareResult cr = new CompareResult();
+        CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
+        compareFieldInfo.setExpectedValue(expectedValue);
+        compareFieldInfo.setActualValue(actualValue);
+        list.add(compareFieldInfo);
+        cr.setCompareFieldInfos(list);
+        cr.setId(id);
+
+        return cr;
     }
 
     private List<String> getNodes(String htmlFile) throws Exception {
