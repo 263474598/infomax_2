@@ -103,7 +103,6 @@ public class PDFController {
         return "0";
     }
 
-    //TODO
     @RequestMapping("/compareList")
     @ResponseBody
     public List<ResultVO> compareList(String targetDate) {
