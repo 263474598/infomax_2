@@ -60,6 +60,10 @@ a:hover,a:focus{color:#74777b;}
 	overflow: hidden;
 }
 
+.htmleaf-container .large-header {
+	background-image: url('../img/background.jpg');
+}
+
 .bgcolor-1 { background: #f0efee; }
 .bgcolor-2 { background: #f9f9f9; }
 .bgcolor-3 { background: #e8e8e8; }/*light grey*/

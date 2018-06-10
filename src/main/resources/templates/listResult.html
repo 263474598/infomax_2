@@ -75,14 +75,19 @@
         $(function() {
             doLoad();
         });
-
+        /*<![CDATA[*/
 	        function doLoad() {
+
+                var tempPath = [[${targetDate}]];
+
                 $.ajax({
                     url: "/pdf/compareList",
                     type: "GET",
                     datatype:"JSON",
                     data: {
+                        targetDate : tempPath
                     },
+					/*]]>*/
                     success: function (data) {
                         dataTable.data(data,'id');
                     }
@@ -110,7 +115,7 @@
 	        // boolean handler to determine if the cell content is rendered
 	    	function isManager(item)
 	    	{
-	    		return (item.diff > 5);
+	    		return (item.diff < 0);
 	    	}
 	    	
 	    	// custom format handler

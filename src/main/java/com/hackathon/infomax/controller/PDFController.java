@@ -29,13 +29,17 @@ public class PDFController {
     @ResponseBody
     public List<CompareResult> getDiffDetails(String path, String pdfHtmlName) {
 
-        Long original = Long.parseLong(path);
-        Long current = original - 1;
+        Long current = Long.parseLong(path);
+        Long original = current - 1;
 
         CompareEngine compareEngine = new CompareEngine();
         List<CompareResult> CompareResultList = null;
         try {
-            CompareResultList = compareEngine.doCompare(classPDFPath + original + "/" + pdfHtmlName, classPDFPath + current + "/" + pdfHtmlName);
+            if(pdfHtmlName.contains("AppleCorp")) {
+                CompareResultList = compareEngine.doCompareWords(classPDFPath + original + "/" + pdfHtmlName, classPDFPath + current + "/" + pdfHtmlName);
+            } else {
+                CompareResultList = compareEngine.doCompare(classPDFPath + original + "/" + pdfHtmlName, classPDFPath + current + "/" + pdfHtmlName);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +56,7 @@ public class PDFController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public String pdfUpload(String saveDate, HttpServletRequest request) throws Exception {
+    public String pdfUpload(String year, String month, HttpServletRequest request) throws Exception {
 
         List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("pdfFile");
 //        String[] pdfHtmls = new String[10];
@@ -63,7 +67,7 @@ public class PDFController {
                 //save path
 //            Date date4Now = new Date();
 //            String str4Now = new SimpleDateFormat("yyyyMMdd").format(date4Now);
-                String pdfPath = classPDFPath + "20180609" + "/" ;
+                String pdfPath = classPDFPath + year + month + "/" ;
                 File pdfFilePath = new File(pdfPath);
                 if (!pdfFilePath.exists()) {
                     boolean flag = pdfFilePath.mkdir();
@@ -88,35 +92,41 @@ public class PDFController {
         List<String> pdfFileNameList = FileUtility4MAX.listPDF(classPDFPath + "20180609" + "/");
         AnalyzeUtil analyzeUtil = new AnalyzeUtil();
         for(String pdfFileName : pdfFileNameList) {
-            analyzeUtil.generate(classPDFPath + "20180609" + "/", pdfFileName, classPDFPath + "20180609" + "/");
+            analyzeUtil.generate(classPDFPath + year + month + "/", pdfFileName, classPDFPath + "20180609" + "/");
         }
 
         //Delete pdf files
-        FileUtility4MAX.deleteFile(classPDFPath + "20180609" + "/");
+        FileUtility4MAX.deleteFile(classPDFPath + year + month + "/");
 
         //Aggregate jsp
 
         return "0";
     }
 
+    //TODO
     @RequestMapping("/compareList")
     @ResponseBody
     public List<ResultVO> compareList(String targetDate) {
         CompareEngine compareEngine = new CompareEngine();
-        List<String> htmlOriginalList = FileUtility4MAX.listHTML(classPDFPath + "20180608" + "/");
-        List<String> htmlTargetList= FileUtility4MAX.listHTML(classPDFPath + "20180609" + "/");
+        Long original = Long.parseLong(targetDate) - 1;
+        List<String> htmlOriginalList = FileUtility4MAX.listHTML(classPDFPath + original + "/");
+        List<String> htmlTargetList= FileUtility4MAX.listHTML(classPDFPath + targetDate + "/");
 
         List<ResultVO> resultVOList = new ArrayList<>();
-
 
         for(String html : htmlTargetList) {
             if(htmlOriginalList.contains(html)) {
                 List<CompareResult> compareResultList = null;
                 try {
-                    compareResultList = compareEngine.doCompare(classPDFPath + "20180608" + "/"+html, classPDFPath + "20180609" + "/"+html);
+                    if(html.contains("AppleCorp")) {
+                        compareResultList = compareEngine.doCompareWords(classPDFPath + original + "/"+html, classPDFPath + targetDate + "/"+html);
+                    } else {
+                        compareResultList = compareEngine.doCompare(classPDFPath + original + "/"+html, classPDFPath + targetDate + "/"+html);
+                    }
+
                     ResultVO resultVO = new ResultVO();
                     resultVO.setDiff(compareResultList.size());
-                    resultVO.setMonth("20180609");
+                    resultVO.setMonth(targetDate);
                     resultVO.setFundName(html.substring(0, html.lastIndexOf(".")));
                     resultVO.setLink("<a href='/pdf/temp?tempPath=" + resultVO.getMonth() + "/" + html + "'  target='_blank'>" + "/" + resultVO.getMonth() + "/" + resultVO.getFundName() + "</a>");
                     resultVOList.add(resultVO);
@@ -124,6 +134,13 @@ public class PDFController {
                     e.printStackTrace();
                 }
 
+            } else {
+                ResultVO resultVO = new ResultVO();
+                resultVO.setDiff(-1);
+                resultVO.setMonth(targetDate);
+                resultVO.setFundName(html.substring(0, html.lastIndexOf(".")));
+                resultVO.setLink("");
+                resultVOList.add(resultVO);
             }
         }
 

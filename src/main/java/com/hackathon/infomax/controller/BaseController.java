@@ -3,6 +3,7 @@ package com.hackathon.infomax.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -11,11 +12,14 @@ public class BaseController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        return "index";
+        return "login";
     }
 
-    @GetMapping("/listResult")
-    public String listResult() {
+    @GetMapping("/listResult/{targetDate}")
+    public String listResult(@PathVariable("targetDate") String targetDate, Model model) {
+
+        model.addAttribute("targetDate", targetDate);
+
         return "listResult";
     }
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>Login</title>
+	<!--<link href="css/bootstrap.min.css" title="" rel="stylesheet" />-->
+<link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+
+<link rel="stylesheet" type="text/css" href="/css/star.css" />
+<!--必要样式-->
+<link rel="stylesheet" type="text/css" href="/css/component.css" />
+<!--[if IE]>
+<script src="/js/html5.js"></script>
+<![endif]-->
+	<script>
+        window.onload=function () {
+            document.getElementById("show").style.display = "none";
+        }
+	</script>
+
+    <script>
+        function login(){
+            var name=document.getElementById("name").value;
+            var pass=document.getElementById("pass").value;
+            if(name=="informax" && pass=="888888"){
+                // alert("login successfully");
+                window.location.href="/base/upload";
+                return false;
+            }else{
+					// alert("asd");
+                document.getElementById("show").style.display ="block";
+                // window.location.href="index.html";
+                return false;
+            }
+        }
+    </script>
+    <script >
+        function formReset()
+        {
+            document.getElementById("myForm").reset();
+            document.getElementById("show").style.display ="none";
+        }
+    </script>
+</head>
+<body>
+		<div class="container login">
+			<div class="content">
+				<div id="large-header" class="large-header">
+					<canvas id="star-canvas"></canvas>
+					<div class="logo_box">
+						<h3>INFORMAX GROUP</h3>
+						<form action="#" name="f" method="post" id="myForm">
+							<div class="input_outer">
+								<span class="u_user"></span>
+								<input name="logname" class="text" style="color: #FFFFFF !important" type="text" placeholder="          Please Enter Your ID" id="name"/>
+							</div>
+							<div class="input_outer">
+								<span class="us_uer"></span>
+								<input name="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="     Please Enter Your Password" id="pass"/>
+							</div>
+							<!--<div class="mb2"><a class="act-but submit" href="javascript:;" style="color: #FFFFFF">Login</a></div>-->
+							<div class="mb2"><a class="act-but submit" onclick="return login();"  style="color: #FFFFFF">Login</a></div>
+                            <div class="mb2"><a class="act-but submit" onclick="return formReset()" style="color: #FFFFFF">Reset</a></div>
+							<div id="show" class="alert alert-info" ><center>ID or Password is incorrect, please kindly reset your ID or Password.</center></div>
+                            <!--<div class="mb2"><a class="act-but <input type="reset" name="button" id="button" value="重置" />></div>-->
+						</form>
+					</div>
+				</div>
+			</div>
+		</div><!-- /container -->
+		<script src="/js/TweenLite.min.js"></script>
+		<script src="/js/EasePack.min.js"></script>
+		<script src="/js/rAF.js"></script>
+		<script src="/js/starLogin.js"></script>
+		<div style="text-align:center;">
+</div>
+	</body>
+</html>

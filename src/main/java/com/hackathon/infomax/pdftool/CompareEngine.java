@@ -37,8 +37,8 @@ public class CompareEngine {
     }
 
 
-    /*public List<CompareResult> doCompareWords(String f1, String f2) throws Exception {
-        String templateHtmlFile = analyzeUtil.generate(f1).concat(".html");
+    public List<CompareResult> doCompareWords(String templateHtmlFile, String templateHtmlFile2) throws Exception {
+//        String templateHtmlFile = analyzeUtil.generate(f1).concat(".html");
         String contentF1 = analyzeUtil.readFileAsString(templateHtmlFile);
         Pattern pattern = Pattern.compile("<div.+id=\"(\\w+)\".+>(Includes.+)<\\/div>\\n.+<div.+>(.+)<\\/div>");
         Matcher matcher = pattern.matcher(contentF1);
@@ -51,8 +51,8 @@ public class CompareEngine {
             f1List.add(valueMataData);
         }
 
-        templateHtmlFile = analyzeUtil.generate(f2).concat(".html");
-        String contentF2 = analyzeUtil.readFileAsString(templateHtmlFile);
+//        templateHtmlFile = analyzeUtil.generate(f2).concat(".html");
+        String contentF2 = analyzeUtil.readFileAsString(templateHtmlFile2);
         matcher = pattern.matcher(contentF2);
         List<ValueMataData> f2List = new ArrayList<>();
         while (matcher.find()) {
@@ -84,7 +84,7 @@ public class CompareEngine {
         }
 
         return compareResults;
-    }*/
+    }
 
     private List<String> getNodes(String htmlFile) throws Exception {
         analyzeUtil.extract(htmlFile);

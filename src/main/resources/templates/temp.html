@@ -59,9 +59,12 @@
                                     ",\n Expected: " + data[i].compareFieldInfos[j].expectedValue +
                                     ",\n Current: " + data[i].compareFieldInfos[j].actualValue +
                                     ",\n Original Value: " + originalValue + "]\n";
-                            } else {
+                            } else if(data[i].compareFieldInfos[j].propertyName != null) {
                                 diffResult = diffResult + "[Different Type: " + data[i].compareFieldInfos[j].propertyName +
                                     ",\n Expected: " + data[i].compareFieldInfos[j].expectedValue +
+                                    ",\n Current: " + data[i].compareFieldInfos[j].actualValue + "]\n";
+                            } else {
+                                diffResult = diffResult + "[Expected: " + data[i].compareFieldInfos[j].expectedValue +
                                     ",\n Current: " + data[i].compareFieldInfos[j].actualValue + "]\n";
                             }
 
