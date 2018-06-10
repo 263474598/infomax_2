@@ -3,6 +3,9 @@
 <head>
     <title>Details</title>
 </head>
+
+<link href="/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
 <body>
 
 <script type="application/javascript">
@@ -15,6 +18,13 @@
     }
 </script>
 
+<div>
+
+    <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="label label-info">Format Discrepancy</span><br> <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="label label-warning">Static Content Discrepancy</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="label label-danger">Dynamic Content Discrepancy</span>
+</div> <br>
 <iframe id="myIframe" th:src="${tempPath}" frameborder=0 scrolling=no width="100%" onload="frameauto()"></iframe>
 
 </body>
@@ -62,20 +72,33 @@
                                 originalValue = data[i].compareFieldInfos[j].originalValue;
 
                                 diffResult = diffResult + "[Different Type: " + data[i].compareFieldInfos[j].propertyName +
-                                    ",\n Expected: " + data[i].compareFieldInfos[j].expectedValue +
-                                    ",\n Current: " + data[i].compareFieldInfos[j].actualValue +
+                                    ",\n Expected: " + data[i].compareFieldInfos[j]. actualValue +
+                                    ",\n Current: " + data[i].compareFieldInfos[j].expectedValue +
                                     ",\n Original Value: " + originalValue + "]\n";
+                                if(data[i].compareFieldInfos[j].propertyName == 'number tolerance out of range') {
+                                    $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="background-color: #d9534f">' + currentValue + '</span></a>');
+                                } else {
+                                    $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="background-color: #5bc0de">' + currentValue + '</span></a>');
+                                }
                             } else if(data[i].compareFieldInfos[j].propertyName != null) {
+
                                 diffResult = diffResult + "[Different Type: " + data[i].compareFieldInfos[j].propertyName +
-                                    ",\n Expected: " + data[i].compareFieldInfos[j].expectedValue +
-                                    ",\n Current: " + data[i].compareFieldInfos[j].actualValue + "]\n";
+                                    ",\n Expected: " + data[i].compareFieldInfos[j].actualValue +
+                                    ",\n Current: " + data[i].compareFieldInfos[j].expectedValue + "]\n";
+
+                                if(data[i].compareFieldInfos[j].propertyName == 'number tolerance out of range') {
+                                    $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="background-color: #d9534f">' + currentValue + '</span></a>');
+                                } else {
+                                    $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="background-color: #5bc0de">' + currentValue + '</span></a>');
+                                }
                             } else {
-                                diffResult = diffResult + "[Expected: " + data[i].compareFieldInfos[j].expectedValue +
-                                    ",\n Current: " + data[i].compareFieldInfos[j].actualValue + "]\n";
+
+                                diffResult = diffResult + "[Expected: " + data[i].compareFieldInfos[j].actualValue +
+                                    ",\n Current: " + data[i].compareFieldInfos[j].expectedValue + "]\n";
+                                $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="background-color: #f0ad4e">' + currentValue + '</span></a>');
                             }
 
                         }
-                        $("#myIframe").contents().find("#"+data[i].id).html('<a href="#" style="text-decoration: none;" title="'+ diffResult +'"><span style="color:red;background-color:yellow;font-weight:bold">' + currentValue + '</span></a>');
 
                         diffResult = '';
                     }
