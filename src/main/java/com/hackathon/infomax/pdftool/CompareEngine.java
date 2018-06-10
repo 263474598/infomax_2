@@ -16,10 +16,8 @@ public class CompareEngine {
     private static AnalyzeUtil analyzeUtil = new AnalyzeUtil();
 
     public List<CompareResult> doCompare(String templateHtmlFile, String tobeComparedHtmlFile) throws Exception {
-//        String templateHtmlFile = analyzeUtil.generate(templateFile).concat(".html");
         List<String> templateNodes = getNodes(templateHtmlFile);
 
-//        String tobeComparedHtmlFile = analyzeUtil.generate(tobeComparedFile).concat(".html");
         List<String> tobeComparedNodes = getNodes(tobeComparedHtmlFile);
 
         List<ValueMataData> templateValueMetaData = new ArrayList<>();
@@ -38,7 +36,6 @@ public class CompareEngine {
 
 
     public List<CompareResult> doCompareWords(String templateHtmlFile, String templateHtmlFile2) throws Exception {
-//        String templateHtmlFile = analyzeUtil.generate(f1).concat(".html");
         String contentF1 = analyzeUtil.readFileAsString(templateHtmlFile);
         Pattern pattern = Pattern.compile("<div.+id=\"(\\w+)\".+>(Includes.+)<\\/div>\\n.+<div.+>(.+)<\\/div>");
         Matcher matcher = pattern.matcher(contentF1);
@@ -48,10 +45,10 @@ public class CompareEngine {
             ValueMataData valueMataData = new ValueMataData();
             valueMataData.setId(matcher.group(1));
             valueMataData.setValue(matcher.group(2).concat(matcher.group(3)));
+            valueMataData.setRawDom(matcher.group(0));
             f1List.add(valueMataData);
         }
 
-//        templateHtmlFile = analyzeUtil.generate(f2).concat(".html");
         String contentF2 = analyzeUtil.readFileAsString(templateHtmlFile2);
         matcher = pattern.matcher(contentF2);
         List<ValueMataData> f2List = new ArrayList<>();
@@ -59,6 +56,7 @@ public class CompareEngine {
             ValueMataData valueMataData = new ValueMataData();
             valueMataData.setId(matcher.group(1));
             valueMataData.setValue(matcher.group(2).concat(matcher.group(3)));
+            valueMataData.setRawDom(matcher.group(0));
             f2List.add(valueMataData);
         }
 
@@ -70,17 +68,23 @@ public class CompareEngine {
                 continue;
             }
 
-            CompareResult cr = new CompareResult();
+            Elements elements1 = Jsoup.parse(f1Con.getRawDom()).select("div");
+            Elements elements2 = Jsoup.parse(f2Con.getRawDom()).select("div");
+            for (int j = 0; j < elements1.size(); j++) {
+                Element ele1 = elements1.get(j);
+                Element ele2 = elements2.get(j);
 
-            cr.setId(f1Con.getId());
-            List<CompareFieldInfo> list = new ArrayList<>();
-            CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
-            compareFieldInfo.setExpectedValue(f1Con.getValue());
-            compareFieldInfo.setActualValue(f2Con.getValue());
-            list.add(compareFieldInfo);
-            cr.setCompareFieldInfos(list);
+                CompareResult cr = new CompareResult();
 
-            compareResults.add(cr);
+                List<CompareFieldInfo> list = new ArrayList<>();
+                CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
+                compareFieldInfo.setExpectedValue(ele1.text());
+                compareFieldInfo.setActualValue(ele2.text());
+                list.add(compareFieldInfo);
+                cr.setCompareFieldInfos(list);
+                cr.setId(ele1.attr("id"));
+                compareResults.add(cr);
+            }
         }
 
         return compareResults;
@@ -90,7 +94,6 @@ public class CompareEngine {
         analyzeUtil.extract(htmlFile);
 
         List<String> nodesInfo = new ArrayList<>();
-//                List<String> nodesInfo = analyzeUtil.findElementsByRegexp("<div.+id=\"p(222|223|224)\".+>([\\w\\,]+)<\\/div>", htmlFile);
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(225|226|227)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(228|229|230)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(231|232|233)\".+>([\\w\\,]+)<\\/div>", htmlFile));
@@ -110,7 +113,13 @@ public class CompareEngine {
             compareResult.setId(vmdTemplate.getId());
 
             List<CompareFieldInfo> list = new ArrayList<>();
-            if (!vmdTemplate.getFontFamily().equals(vmdTobeComp.getFontFamily())) {
+            if (vmdTobeComp.getValue().equals("fake")) {
+                CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
+                compareFieldInfo.setPropertyName("value-not-set");
+                compareFieldInfo.setExpectedValue(vmdTemplate.getValue());
+                compareFieldInfo.setActualValue("null");
+                list.add(compareFieldInfo);
+            } else if (!vmdTemplate.getFontFamily().equals(vmdTobeComp.getFontFamily())) {
                 CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
                 compareFieldInfo.setPropertyName("font-family");
                 compareFieldInfo.setExpectedValue(vmdTemplate.getFontFamily());
@@ -129,13 +138,13 @@ public class CompareEngine {
                 compareFieldInfo.setExpectedValue(vmdTemplate.isNumber() ? "numeric" : "string");
                 compareFieldInfo.setActualValue(vmdTobeComp.isNumber() ? "numeric" : "string");
                 list.add(compareFieldInfo);
-            } else if(vmdTemplate.isNumber()){
+            } else if (vmdTemplate.isNumber()) {
                 BigDecimal numberDecimal = new BigDecimal(vmdTemplate.getValue().replace(",", ""));
                 BigDecimal ceiling = numberDecimal.add(numberDecimal.multiply(NUMBER_TOLERANCE));
                 BigDecimal floor = numberDecimal.subtract(numberDecimal.multiply(NUMBER_TOLERANCE));
 
                 BigDecimal tobeComparedValue = new BigDecimal(vmdTobeComp.getValue().replace(",", ""));
-                if(tobeComparedValue.compareTo(ceiling) == 1 || tobeComparedValue.compareTo(floor) == -1){
+                if (tobeComparedValue.compareTo(ceiling) == 1 || tobeComparedValue.compareTo(floor) == -1) {
                     CompareFieldInfo compareFieldInfo = new CompareFieldInfo();
                     compareFieldInfo.setPropertyName("number tolerance out of range");
                     compareFieldInfo.setExpectedValue(vmdTemplate.getValue());
