@@ -34,64 +34,50 @@ public class CompareEngine {
         return compareResultsTable;
     }
 
+    private List<ValueMataData> getValueMetaData(String region, String fileContent) {
+        Pattern pattern = Pattern.compile("<div.+id=\"(\\w+)\".+>" + region + ".+\\n.+<div.+id=\"([\\w,]+)\".+>([\\w,]+)</div>\\n.+<div.+id=\"([\\w,]+)\".+>([\\w,]+)</div>\\n.+<div.+id=\"([\\w,]+)\".+>([\\w,]+)</div>\\n.+<div.+id=\"(\\w+)\".+>(-?\\w+%)</div>\\n.+(<div.+id=\"(\\w+)\".+>(\\w+%)</div>)?");
+        Matcher matcher = pattern.matcher(fileContent);
+        List<ValueMataData> valueMataDatas = new ArrayList<>();
+        if (matcher.find()) {
+            valueMataDatas.add(new ValueMataData(matcher.group(2), matcher.group(3)));
+            valueMataDatas.add(new ValueMataData(matcher.group(4), matcher.group(5)));
+            valueMataDatas.add(new ValueMataData(matcher.group(6), matcher.group(7)));
+            valueMataDatas.add(new ValueMataData(matcher.group(8), matcher.group(9)));
+            if (!region.equals("Total"))
+                valueMataDatas.add(new ValueMataData(matcher.group(10), matcher.group(11)));
+        }
+        return valueMataDatas;
+    }
+
 
     public List<CompareResult> doCompareWords(String templateHtmlFile, String templateHtmlFile2) throws Exception {
+        //apple 1
         String contentF1 = analyzeUtil.readFileAsString(templateHtmlFile);
-        Pattern pattern = Pattern.compile("<div.+id=\"(\\w+)\".+>(Includes.+)<\\/div>\\n.+<div.+>(.+)<\\/div>");
-        Matcher matcher = pattern.matcher(contentF1);
+        List<ValueMataData> metaValues = getValueMetaData("Americas", contentF1);
+        metaValues.addAll(getValueMetaData("Europe", contentF1));
+        metaValues.addAll(getValueMetaData("China", contentF1));
+        metaValues.addAll(getValueMetaData("Japan", contentF1));
+        metaValues.addAll(getValueMetaData("Total", contentF1));
 
-        List<ValueMataData> f1List = new ArrayList<>();
-        while (matcher.find()) {
-            ValueMataData valueMataData = new ValueMataData();
-            valueMataData.setId(matcher.group(1));
-            valueMataData.setValue(matcher.group(2).concat(matcher.group(3)));
-            valueMataData.setRawDom(matcher.group(0));
-            f1List.add(valueMataData);
-        }
-
+        //apple2
         String contentF2 = analyzeUtil.readFileAsString(templateHtmlFile2);
-        matcher = pattern.matcher(contentF2);
-        List<ValueMataData> f2List = new ArrayList<>();
-        while (matcher.find()) {
-            ValueMataData valueMataData = new ValueMataData();
-            valueMataData.setId(matcher.group(1));
-            valueMataData.setValue(matcher.group(2).concat(matcher.group(3)));
-            valueMataData.setRawDom(matcher.group(0));
-            f2List.add(valueMataData);
-        }
+        List<ValueMataData> metaValues2 = getValueMetaData("Americas", contentF1);
+        metaValues2.addAll(getValueMetaData("Europe", contentF2));
+        metaValues2.addAll(getValueMetaData("China", contentF2));
+        metaValues2.addAll(getValueMetaData("Japan", contentF2));
+        metaValues2.addAll(getValueMetaData("Total", contentF2));
 
-        List<CompareResult> compareResults = new ArrayList<>();
-        for (int i = 0; i < f1List.size(); i++) {
-            ValueMataData f1Con = f1List.get(i);
-            ValueMataData f2Con = f2List.get(i);
-            if (f1Con.getValue().equals(f2Con.getValue())) {
-                continue;
-            }
-
-            Elements elements1 = Jsoup.parse(f1Con.getRawDom()).select("div");
-            Elements elements2 = Jsoup.parse(f2Con.getRawDom()).select("div");
-            for (int j = 0; j < elements1.size(); j++) {
-                Element ele1 = elements1.get(j);
-                Element ele2 = elements2.get(j);
-
-                compareResults.add(getComparedResults(ele1.text(), ele2.text(), ele1.attr("id")));
+        List<CompareResult> cpresults = new ArrayList<>();
+        for (int i = 0; i < metaValues.size(); i++) {
+            ValueMataData m1 = metaValues.get(i);
+            ValueMataData m2 = metaValues2.get(i);
+            if (m1.getValue() != null && m2.getValue() != null && !m1.getValue().equals(m2.getValue())) {
+                cpresults.add(getComparedResults(m1.getValue(), m2.getValue(), m1.getId()));
+                cpresults.add(getComparedResults(m1.getValue(), m2.getValue(), m2.getId()));
             }
         }
 
-        Element ele1 = Jsoup.parse(contentF1).getElementById("p2");
-        Element ele2 = Jsoup.parse(contentF2).getElementById("p2");
-        if (!ele1.equals(ele2)) {
-            compareResults.add(getComparedResults(ele1.text(), ele2.text(), ele1.attr("id")));
-        }
-
-        Element ele3 = Jsoup.parse(contentF1).getElementById("p50");
-        Element ele4 = Jsoup.parse(contentF2).getElementById("p46");
-        if (!ele3.equals(ele4)) {
-            compareResults.add(getComparedResults(ele3.text(), ele4.text(), ele3.attr("id")));
-            compareResults.add(getComparedResults(ele3.text(), ele4.text(), ele4.attr("id")));
-        }
-
-        return compareResults;
+        return cpresults;
     }
 
     private CompareResult getComparedResults(String expectedValue, String actualValue, String id) {
@@ -110,8 +96,8 @@ public class CompareEngine {
 
     private List<String> getNodes(String htmlFile) throws Exception {
         analyzeUtil.extract(htmlFile);
-
-        List<String> nodesInfo = new ArrayList<>();
+//        List<String> nodesInfo = new ArrayList<>();
+        List<String> nodesInfo = analyzeUtil.findElementsByRegexp("<div.+id=\"p(222|223|224)\".+>([\\w\\,]+)<\\/div>", htmlFile);
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(225|226|227)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(228|229|230)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(231|232|233)\".+>([\\w\\,]+)<\\/div>", htmlFile));
@@ -178,6 +164,7 @@ public class CompareEngine {
         }
 
         return compareResults;
+
     }
 
     private List<CompareResult> doCompareParagraph(String templateHtmlFile, String tobeComparedHtmlFile) throws Exception {

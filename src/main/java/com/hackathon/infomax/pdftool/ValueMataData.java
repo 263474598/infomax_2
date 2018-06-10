@@ -8,6 +8,13 @@ public class ValueMataData {
     private String fontFamily;
     private String rawDom;
 
+    public ValueMataData(){}
+
+    public ValueMataData(String id, String value){
+        this.id = id;
+        this.value = value;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
