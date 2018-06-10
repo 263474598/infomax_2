@@ -22,10 +22,15 @@ public class CompareEngine {
         templateNodes.addAll(getNodes(templateHtmlFile, "231|232|233"));
         templateNodes.addAll(getNodes(templateHtmlFile, "234|235|236"));
 
-        List<String> tobeComparedNodes = getNodes(tobeComparedHtmlFile, "225|226|227");
-        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "228|229|230"));
-        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "231|232|233"));
-        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "234|235|236"));
+        List<String> tobeComparedNodes = getNodes(tobeComparedHtmlFile, "226|227|228");
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "229|230|231"));
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "232|233|234"));
+        tobeComparedNodes.addAll(getNodes(tobeComparedHtmlFile, "235|236|237"));
+
+
+
+
+
 
         List<ValueMataData> templateValueMetaData = new ArrayList<>();
         templateNodes.forEach(t -> templateValueMetaData.add(analyzeUtil.getValueMetaData(t)));
