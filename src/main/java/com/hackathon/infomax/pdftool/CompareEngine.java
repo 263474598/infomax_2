@@ -96,8 +96,8 @@ public class CompareEngine {
 
     private List<String> getNodes(String htmlFile) throws Exception {
         analyzeUtil.extract(htmlFile);
-//        List<String> nodesInfo = new ArrayList<>();
-        List<String> nodesInfo = analyzeUtil.findElementsByRegexp("<div.+id=\"p(222|223|224)\".+>([\\w\\,]+)<\\/div>", htmlFile);
+        List<String> nodesInfo = new ArrayList<>();
+//        List<String> nodesInfo = analyzeUtil.findElementsByRegexp("<div.+id=\"p(222|223|224)\".+>([\\w\\,]+)<\\/div>", htmlFile);
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(225|226|227)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(228|229|230)\".+>([\\w\\,]+)<\\/div>", htmlFile));
         nodesInfo.addAll(analyzeUtil.findElementsByRegexp("<div.+id=\"p(231|232|233)\".+>([\\w\\,]+)<\\/div>", htmlFile));
